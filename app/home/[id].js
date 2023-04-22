@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View, SafeAreaView, Button, StatusBar } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 
 export default function Page() {
 
     const router = useRouter();
+    const params = useSearchParams();
+    const Key = JSON.stringify(params.id)
 
     const handlePress = () => {
-        router.push('profile');
+        router.push('profile/' + Key);
     }
 
     return (

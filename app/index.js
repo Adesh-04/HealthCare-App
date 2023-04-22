@@ -13,7 +13,7 @@ export default function Welcome() {
       <Text style={styles.text} >Welcome !!</Text>
 
       <View style={styles.login}>
-        <Button title={'Login'} onPress={() => { router.push('/home') }} />
+        <Button title={'Login'} onPress={() => { router.push('login') }} />
       </View>
     </View>
   )

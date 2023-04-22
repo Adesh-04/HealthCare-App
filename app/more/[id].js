@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text, StyleSheet, StatusBar } from 'react-native';
-import ProfileText from "./components/profileText";
+import ProfileText from "./../components/profileText";
 
-import { db } from './../firebase/firebase'
+import { db } from './../../firebase/firebase'
 import { getDoc, doc } from 'firebase/firestore'
-import { useRouter } from 'expo-router'
+import { useRouter, useSearchParams } from 'expo-router'
 
 
 export default function More() {
@@ -13,12 +13,14 @@ export default function More() {
         getData();
     }, [])
 
+    const params = useSearchParams();
+    const Key = JSON.stringify(params.id).replaceAll("\"", '').replaceAll("\\", '')
+
     async function getData() {
-        const profileRef = doc(db, "patient_data", "11e92eb80f6e4ba48e16")
+        const profileRef = doc(db, "patient_data", Key)
         const patientDataCollection = await getDoc(profileRef)
         if (patientDataCollection.exists()) {
             const tmp = patientDataCollection.data()
-            console.log(tmp)
             setProfileItems(tmp)
             setAllergy(Object.values(tmp['Allergy']))
             setCurr_Med(Object.values(tmp['Curr_Med']))

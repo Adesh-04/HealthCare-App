@@ -39,9 +39,9 @@ export default function Signin() {
     const handleSignin = async () => {
         if (Password === VPassword) {
             await setDoc(doc(db, "patient_login", DeviceId), {
-                id: DeviceId,
-                Email: Email,
-                Password: Password
+                id: DeviceId.toLowerCase().trim(),
+                email: Email.toLowerCase().trim(),
+                password: Password
             });
             router.back()
         }

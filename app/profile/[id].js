@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, StyleSheet, StatusBar, ScrollView } from "react-native";
-import ProfileText from "./components/profileText";
+import ProfileText from "./../components/profileText";
 
-import { db } from './../firebase/firebase'
+import { db } from './../../firebase/firebase'
 import { getDoc, doc } from 'firebase/firestore'
-import { useRouter } from 'expo-router'
+import { useRouter, useSearchParams } from 'expo-router'
 
 export default function Profile() {
 
@@ -12,9 +12,12 @@ export default function Profile() {
         getData();
     }, [])
 
+    const router = useRouter();
+    const param = useSearchParams();
+    const Key = JSON.stringify(param.id).replaceAll("\"", '').replaceAll("\\", '')
 
     async function getData() {
-        const profileRef = doc(db, "patient_data", "2dc9c05f84e446d1a8e1")
+        const profileRef = doc(db, "patient_data", Key)
         const patientDataCollection = await getDoc(profileRef)
         if (patientDataCollection.exists()) {
             const tmp = patientDataCollection.data()
@@ -36,8 +39,6 @@ export default function Profile() {
     const [Address, setAddress] = useState('')
     const [BloodGroup, setBloodGroup] = useState('')
 
-    const router = useRouter();
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -54,7 +55,7 @@ export default function Profile() {
                         <ProfileText text={'Weight'} Value={Weight} />
                         <ProfileText text={'Gender'} Value={Gender} />
                         <ProfileText text={'Blood Group'} Value={BloodGroup} />
-                        <Text style={styles.details_more} onPress={() => router.push('/more')}> More ... </Text>
+                        <Text style={styles.details_more} onPress={() => router.push('/more/' + JSON.stringify(param.id))}> More ... </Text>
                     </View>
                 </View>
                 <View style={styles.update}>

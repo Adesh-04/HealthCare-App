@@ -9,9 +9,9 @@ export default function Login() {
 
     const router = useRouter();
 
-    const [DeviceId, setDeviceId] = useState('')
-    const [Email, setEmail] = useState('')
-    const [Password, SetPassword] = useState('')
+    const [DeviceId, setDeviceId] = useState('2dc9c05f84e446d1a8e1')
+    const [Email, setEmail] = useState('ShyamKumar67@gmail.com')
+    const [Password, SetPassword] = useState('Shyam@123')
     // later make it disabled unless all entries are validated
     const [buttonDisable, setButton] = useState(false)
 
@@ -20,13 +20,14 @@ export default function Login() {
 
     async function handleLogin() {
         await getData()
-        if (usrs.includes(Email)) {
-            if (Password == allEntries[usrs.indexOf(Email)].password) {
-                if (DeviceId === allEntries[usrs.indexOf(Email)].id) {
+
+        if (usrs.includes(Email.toLowerCase().trim())) {
+            if (Password.trim() == allEntries[usrs.indexOf(Email.toLowerCase().trim())].password.trim()) {
+                if (DeviceId.trim() === allEntries[usrs.indexOf(Email.toLowerCase().trim())].id.toLowerCase().trim()) {
                     Alert.alert("Successfully logged in.")
                     console.log("Successfully logged in.")
                     router.back()
-                    router.replace('/home')
+                    router.replace('/home/' + JSON.stringify(DeviceId))
                 } else { Alert.alert("Invalid Id") }
             } else { Alert.alert("Invalid password") }
         } else { Alert.alert("User Not Found") }
