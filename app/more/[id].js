@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text, StyleSheet, StatusBar } from 'react-native';
-import ProfileText from "./../components/profileText";
 
 import { db } from './../../firebase/firebase'
 import { getDoc, doc } from 'firebase/firestore'
@@ -50,14 +49,29 @@ export default function More() {
                 </View>
                 <View style={styles.main}>
                     <View style={styles.details}>
-                        <ProfileText text={'Allergy'} Value={Allergy} />
-                        <ProfileText text={'Symptoms'} Value={Symptoms} />
-                        <ProfileText text={'Current Medication'} Value={Curr_Med} />
-                        <ProfileText text={'Past Medication'} Value={Past_Med} />
+                        <ProfileText props={[Allergy, Symptoms, Curr_Med, Past_Med]} />
                     </View>
                 </View>
             </ScrollView>
         </ScrollView>
+    )
+}
+
+const ProfileText = ({ props }) => {
+    var text = ['Allergy', 'Symptoms', 'Current Medication', 'Past Medication']
+    return (
+        <View>
+            {
+                text.map((val, i) => {
+                    return (
+                        <View key={i}>
+                            <Text style={styles.detailsText}>{val}</Text>
+                            <Text style={styles.detailsVal}>{props[i]}</Text>
+                        </View>
+                    )
+                })
+            }
+        </View>
     )
 }
 
@@ -84,5 +98,17 @@ const styles = StyleSheet.create({
     details: {
         marginLeft: '10%',
         paddingVertical: '5%'
+    },
+    detailsText: {
+        color: 'lightgray',
+        fontWeight: 'bold'
+    },
+    detailsVal: {
+        color: 'rgb(10, 10, 10)',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop: '1%',
+        marginLeft: '2%',
+        marginBottom: '10%'
     },
 })
