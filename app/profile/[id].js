@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, TextInput, StyleSheet, StatusBar, ScrollView, Alert } from "react-native";
 
 import { db } from './../../firebase/firebase'
-import { getDoc, doc, updateDoc, serverTimestamp, arrayUnion } from 'firebase/firestore'
+import { getDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { useRouter, useSearchParams } from 'expo-router'
 
 export default function Profile() {
