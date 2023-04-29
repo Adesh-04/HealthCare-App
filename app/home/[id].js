@@ -6,6 +6,7 @@ import { getDoc, doc } from 'firebase/firestore'
 import { db, real } from './../../firebase/firebase'
 import { ref, onValue } from 'firebase/database'
 
+import { Prediction } from "../../prediction/main";
 
 export default function Page() {
 
@@ -28,6 +29,8 @@ export default function Page() {
     const [BP, setBP] = useState('??')
     const [Pulse, setPulse] = useState('??')
 
+    const [modelData, setModelData] = useState([])
+
     const getData = async () => {
         const profileRef = doc(db, "patient_data", Key)
         const patientDataCollection = await getDoc(profileRef)
@@ -37,27 +40,51 @@ export default function Page() {
             setGender(tmp["Gender"])
         } else { console.log('No data found') }
 
+        const patientRef = doc(db, "patient_QnA", Key)
+        const patientDataCollection2 = await getDoc(patientRef)
+        if (patientDataCollection2.exists()) {
+            tmp = patientDataCollection2.data()
+            setModelData(tmp)
+        } else { console.log('No data found') }
+
+
         const starCountRef = ref(real, 'users/' + 'Key');
         onValue(starCountRef, (snapshot) => {
             if (snapshot.exists()) {
                 setBP(snapshot.val().bp)
                 setPulse(snapshot.val().pulse)
             }
+        })
+    }
 
-        });
+    const handleQuestion = () => {
+        if ('question pressed') {
+            // updating on firestore patient_QnA
+            'send data'
+            // prediction
+            return (
+                <Prediction data={modelData} />
+            )
+        }
     }
 
 
     return (
         <SafeAreaView style={styles.container} >
             <View style={styles.profile}>
-                <TouchableOpacity onPress={() => router.push('profile/' + Key)} style={styles.profileButton}>
-                    {
-                        gender === 'female' ? <Image source={require('./../../assets/female.png')} style={styles.profileImg} />
-                            : <Image source={require('./../../assets/male.png')} style={styles.profileImg} />
-                    }
+                <View style={styles.profileHeader}>
+                    <TouchableOpacity onPress={() => router.push('profile/' + Key)} style={styles.profileButton}>
+                        {
+                            gender === 'female' ? <Image source={require('./../../assets/female.png')} style={styles.profileImg} />
+                                : <Image source={require('./../../assets/male.png')} style={styles.profileImg} />
+                        }
 
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('profile/' + Key)} style={styles.menuButton} >
+                        <Image source={require('./../../assets/menu.png')} style={styles.menu} />
+                    </TouchableOpacity>
+                </View>
+
                 <Text style={styles.date}>{date}</Text>
                 <Text style={styles.name}>Hello, {name}!</Text>
             </View>
@@ -80,7 +107,7 @@ export default function Page() {
                     <Text>Question</Text>
                 </View>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
@@ -94,11 +121,16 @@ const styles = StyleSheet.create({
         color: 'black',
         height: '25%',
         paddingHorizontal: '5%',
-        paddingTop: '5%'
+        paddingTop: '5%',
+
+    },
+    profileHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     profileButton: {
         marginBottom: '10%',
-        width: '20%'
+        width: '20%',
     },
     profileImg: {
         width: 70,
@@ -106,6 +138,15 @@ const styles = StyleSheet.create({
         borderRadius: 70,
         borderColor: 'lightblue',
         borderWidth: 3
+    },
+    menuButton: {
+        marginTop: '3%',
+        height: '50%',
+        borderRadius: 50
+    },
+    menu: {
+        width: 40,
+        height: 40,
     },
     date: {
         color: 'black',
@@ -140,7 +181,7 @@ const styles = StyleSheet.create({
     },
     cardText: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     BPcard: {
         flex: 1,
@@ -154,6 +195,8 @@ const styles = StyleSheet.create({
         height: 100,
         marginLeft: 'auto',
         marginRight: 'auto',
+        marginTop: '20%',
+        marginBottom: '20%',
     },
     Pcard: {
         flex: 1,
